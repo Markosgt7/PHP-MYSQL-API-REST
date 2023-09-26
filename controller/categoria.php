@@ -8,6 +8,8 @@
   $body = json_decode(file_get_contents("php://input"),true);
 
   switch ($_GET["op"]) {
+
+
     //obtener todas las categorias
     case "GetAll":
       $datos = $categoria->get_categoria();
@@ -19,6 +21,8 @@
         echo json_encode("No se encontraron categorias");
       }
       break;
+
+
     //obtener categorias por id  
     case "GetId":
       if(!isset($body["cat_id"])){
@@ -35,6 +39,8 @@
         echo json_encode('Categoría no existe');
       }
       break;
+
+
     //insertar categoria  
     case "insert":
       if(!isset($body["cat_nom"]) || !isset($body["cat_obs"])){
@@ -64,16 +70,21 @@
         echo json_encode('Parámetros cat_nom, cat_obs son obligatorios.');
         break;
       }
-
-      $datos = $categoria->update_categoria($body["cat_id"],$body["cat_nom"],$body["cat_obs"]);
-      if($datos){
-        http_response_code(200);
-        echo json_encode("Actualización exitosa");
-      }else{
+      try {
+        $datos = $categoria->update_categoria($body["cat_id"],$body["cat_nom"],$body["cat_obs"]);
+        if($datos){
+          http_response_code(200);
+          echo json_encode("Actualización exitosa");
+        }else{
+          http_response_code(500);
+          echo json_encode("Error al actualizar Categoría");
+        }
+      } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode("Error al actualizar Categoría");
+        echo json_encode($e->getMessage());        
       }
       break;
+
     //eliminar categorias  
     case "delete":
       if(!isset($body["cat_id"])){
@@ -81,14 +92,18 @@
         echo json_encode('parametro cat_id es obligatorio');
         break;
       }
-      
-      $datos = $categoria->delete_categoria($body["cat_id"]);
-      if($datos){
-        http_response_code(200);
-        echo json_encode("eliminación Exitosa");
-      }else{
-        http_response_code(404);//Not Found
-        echo json_encode('No se encontró el registro');
+      try {
+        $datos = $categoria->delete_categoria($body["cat_id"]);
+        if($datos){
+          http_response_code(200);
+          echo json_encode("eliminación Exitosa");
+        }else{
+          http_response_code(404);//Not Found
+          echo json_encode('No se encontró el registro');
+        }
+      } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode($e->getMessage());
       }
       break;
     //mensaje por defecto

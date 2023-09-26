@@ -9,8 +9,8 @@
       $sql->execute();
       return $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     public function get_categoria_por_id($cat_id){
-
       $conectar = parent::conexion();
       parent::set_name();
       $sql = "SELECT * FROM categorias WHERE cat_est=1 AND cat_id=?";
@@ -36,28 +36,35 @@
     }
     
     public function update_categoria($cat_id, $cat_nom, $cat_obs){
-      $conectar = parent::conexion();
-      parent::set_name();
-      $sql="UPDATE categorias SET cat_nom=?,cat_obs=? WHERE cat_id=?";
-      $sql=$conectar->prepare($sql);
-      $sql->bindValue(1,$cat_nom);
-      $sql->bindValue(2,$cat_obs);
-      $sql->bindValue(3,$cat_id);
-      $sql->execute();
-      
-      return $resultado = $sql->fetchall(PDO::FETCH_ASSOC);
+      try {
+        $conectar = parent::conexion();
+        parent::set_name();
+        $sql="UPDATE categorias SET cat_nom=?,cat_obs=? WHERE cat_id=?";
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1,$cat_nom);
+        $sql->bindValue(2,$cat_obs);
+        $sql->bindValue(3,$cat_id);
+        $sql->execute();        
+          return true;
+      } catch (Exception $e) {
+        throw new Exception("Error al actualizar categoría".$e->getMessage());        
+      }
 
 
     }
 
     public function delete_categoria($cat_id){
-      $conectar = parent::conexion();
-      parent::set_name();
-      $sql ="DELETE from categorias where cat_id=? ";
-      $sql =$conectar->prepare($sql);
-      $sql->bindValue(1,$cat_id);
-      $sql->execute();
-      return $resultado = $sql ->fetchAll(PDO::FETCH_ASSOC);
+      try {
+        $conectar = parent::conexion();
+        parent::set_name();
+        $sql ="DELETE from categorias where cat_id=? ";
+        $sql =$conectar->prepare($sql);
+        $sql->bindValue(1,$cat_id);
+        $sql->execute();
+        return true;
+      } catch (Exception $e) {
+        throw new Exception("Error al eliminar categoría".$e->getMessage());
+      }
     }
 
   }
