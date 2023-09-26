@@ -9,7 +9,7 @@
       $sql->execute();
       return $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     public function get_categoria_por_id($cat_id){
       $conectar = parent::conexion();
       parent::set_name();
@@ -29,7 +29,7 @@
         $sql->bindValue(1,$cat_nom);
         $sql->bindValue(2,$cat_obs);
         $sql->execute();
-        return true;
+        return ($sql->rowCount()>0) ? true : false;
       } catch (Exception $e) {
         throw new Exception("Error al insertar la categoria:".$e->getMessage());
       }
@@ -45,7 +45,7 @@
         $sql->bindValue(2,$cat_obs);
         $sql->bindValue(3,$cat_id);
         $sql->execute();        
-          return true;
+        return ($sql->rowCount()>0) ? true : false;
       } catch (Exception $e) {
         throw new Exception("Error al actualizar categoría".$e->getMessage());        
       }
@@ -61,7 +61,7 @@
         $sql =$conectar->prepare($sql);
         $sql->bindValue(1,$cat_id);
         $sql->execute();
-        return true;
+        return ($sql->rowCount()>0) ? true : false;
       } catch (Exception $e) {
         throw new Exception("Error al eliminar categoría".$e->getMessage());
       }
