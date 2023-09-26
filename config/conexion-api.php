@@ -14,6 +14,9 @@
     public function set_name(){
       return $this->dbh->query("SET NAMES 'utf8'");
     }  
+    public function cerrarConexion() {
+      $this->dbh = null;
+  }
   }
 
 ?>
