@@ -42,14 +42,18 @@
         echo json_encode('Parametros cat_nom y cat_obs son obligatorios');
         break;
       }
-
-      $datos = $categoria->insert_categoria($body["cat_nom"],$body["cat_obs"]);
-      if($datos){
-        http_response_code(201); //creado correctamente
-        echo json_encode("Ingreso Exitoso");
-      }else{
-        http_response_code(500); //error server
-        echo json_encode("Error al insertar la categoría");
+      try {
+        $datos = $categoria->insert_categoria($body["cat_nom"],$body["cat_obs"]);
+        if($datos){
+          http_response_code(201); //creado correctamente
+          echo json_encode("Ingreso Exitoso");
+        }else{
+          http_response_code(500); //error server
+          echo json_encode("Error al insertar la categoría");
+        }
+      } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode($e->getMessage());
       }
       break;
 

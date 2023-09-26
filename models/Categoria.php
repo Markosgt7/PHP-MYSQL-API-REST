@@ -21,14 +21,18 @@
     }
 
     public function insert_categoria($cat_nom, $cat_obs){
-      $conectar = parent::conexion();
-      parent::set_name();
-      $sql="INSERT INTO categorias(cat_id,cat_nom,cat_obs,cat_est) VALUES(NULL,?,?,'1')";
-      $sql=$conectar->prepare($sql);
-      $sql->bindValue(1,$cat_nom);
-      $sql->bindValue(2,$cat_obs);
-      $sql->execute();
-      return $resultado = $sql->fetchall(PDO::FETCH_ASSOC);
+      try {
+        $conectar = parent::conexion();
+        parent::set_name();
+        $sql="INSERT INTO categorias(cat_id,cat_nom,cat_obs,cat_est) VALUES(NULL,?,?,'1')";
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1,$cat_nom);
+        $sql->bindValue(2,$cat_obs);
+        $sql->execute();
+        return true;
+      } catch (Exception $e) {
+        throw new Exception("Error al insertar la categoria:".$e->getMessage());
+      }
     }
     
     public function update_categoria($cat_id, $cat_nom, $cat_obs){
